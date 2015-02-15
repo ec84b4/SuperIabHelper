@@ -8,6 +8,8 @@ package ir.tgbs.iranapps.billing.helper.util;
 public class InAppKeys {
     public static final String
             IRANAPPS_PACKAGE_NAME = "ir.tgbs.android.iranapp",
+            CAFEBAZAAR_PACKAGE_NAME = "com.farsitel.bazaar",
+            GOOGLE_PLAY_PACKAGE_NAME = "com.android.vending",
             RESPONSE_CODE = "RESPONSE_CODE",
             DETAILS_LIST = "DETAILS_LIST",
             ITEM_ID_LIST = "ITEM_ID_LIST",

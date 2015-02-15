@@ -7,8 +7,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-import ir.tgbs.iranapps.billing.IranAppsIabService;
 import ir.tgbs.iranapps.billing.helper.interfaces.SkuDetailListener;
+import ir.tgbs.iranapps.billing.helper.model.IabService;
 import ir.tgbs.iranapps.billing.helper.model.Product;
 
 /**
@@ -20,7 +20,7 @@ import ir.tgbs.iranapps.billing.helper.model.Product;
  */
 public class SkuDetailGetter extends Thread {
     SkuDetailListener listener;
-    IranAppsIabService inAppService;
+    IabService inAppService;
     Bundle skusBundle;
 
     /**
@@ -31,7 +31,7 @@ public class SkuDetailGetter extends Thread {
      * @param skuNames     list of skuName
      * @param listener     callback listener for indicating failure or success getSkuDetail process
      */
-    public SkuDetailGetter(IranAppsIabService inAppService, ArrayList<String> skuNames, SkuDetailListener listener) {
+    public SkuDetailGetter(IabService inAppService, ArrayList<String> skuNames, SkuDetailListener listener) {
         this.inAppService = inAppService;
         skusBundle = new Bundle();
         //put skuNames in skuBundle

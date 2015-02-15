@@ -5,8 +5,8 @@ import android.os.RemoteException;
 
 import java.util.ArrayList;
 
-import ir.tgbs.iranapps.billing.IranAppsIabService;
 import ir.tgbs.iranapps.billing.helper.interfaces.PurchasesListener;
+import ir.tgbs.iranapps.billing.helper.model.IabService;
 import ir.tgbs.iranapps.billing.helper.model.PurchaseData;
 
 /**
@@ -26,7 +26,7 @@ public class GetPurchasesHelper extends Thread {
     /**
      * connection to IranApps billing service
      */
-    IranAppsIabService inAppService;
+    IabService inAppService;
 
     /**
      * the INAPP_CONTINUABLE_TOKEN returned in {@link ir.tgbs.iranapps.billing.helper.interfaces.PurchasesListener#onGotPurchases(java.util.ArrayList, String)}
@@ -41,7 +41,7 @@ public class GetPurchasesHelper extends Thread {
      * @param listener          callback listener for indicating failure and success purchase process
      * @param continuationToken token for verify purchase
      */
-    public GetPurchasesHelper(IranAppsIabService inAppService, PurchasesListener listener, String continuationToken) {
+    public GetPurchasesHelper(IabService inAppService, PurchasesListener listener, String continuationToken) {
         this.inAppService = inAppService;
         this.listener = listener;
         this.continuationToken = continuationToken;

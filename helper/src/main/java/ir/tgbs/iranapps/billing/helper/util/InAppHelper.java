@@ -12,12 +12,13 @@ import android.os.RemoteException;
 
 import java.util.ArrayList;
 
-import ir.tgbs.iranapps.billing.IranAppsIabService;
 import ir.tgbs.iranapps.billing.helper.interfaces.BuyProductListener;
 import ir.tgbs.iranapps.billing.helper.interfaces.ConsumeListener;
 import ir.tgbs.iranapps.billing.helper.interfaces.LoginListener;
 import ir.tgbs.iranapps.billing.helper.interfaces.PurchasesListener;
 import ir.tgbs.iranapps.billing.helper.interfaces.SkuDetailListener;
+import ir.tgbs.iranapps.billing.helper.model.AppStore;
+import ir.tgbs.iranapps.billing.helper.model.IabService;
 
 /**
  * <h1>IranApps in-app billing helper class</h1> <p>
@@ -48,7 +49,7 @@ public class InAppHelper {
     /**
      * IranApps in-app billing connection
      */
-    IranAppsIabService inAppService;
+    IabService iabService;
 
     /**
      * callback listener on connection to service's success or failure
@@ -64,6 +65,8 @@ public class InAppHelper {
      * Service Connection used to bind to IranApps in-app billing service
      */
     ServiceConnection inAppConnection = new InAppServiceConnection();
+
+    AppStore appStore;
 
     /**
      * creates an instance of InAppHelper with the given parameters.<br>
@@ -82,14 +85,15 @@ public class InAppHelper {
      * @param activity            used to communicate to IranApps billing service
      * @param inAppHelperListener listener used to notice you when InAppHelper connects to IranApps billing service
      */
-    public InAppHelper(Activity activity, InAppHelperListener inAppHelperListener) {
+    public InAppHelper(Activity activity, AppStore appStore,  InAppHelperListener inAppHelperListener) {
         PACKAGE_NAME = activity.getPackageName();
         this.activity = activity;
+        this.appStore = appStore;
         this.inAppHelperListener = inAppHelperListener;
 
         //bind to IranApps billing service
-        Intent serviceIntent = new Intent(IranAppsIabService.class.getName());
-        serviceIntent.setPackage(InAppKeys.IRANAPPS_PACKAGE_NAME);
+        Intent serviceIntent = new Intent(appStore.intentAction);
+        serviceIntent.setPackage(appStore.packageName);
         boolean canConnect = activity.bindService(serviceIntent, inAppConnection, Context.BIND_AUTO_CREATE);
         if (!canConnect) {
             if (!isIranAppsInstalled()) {
@@ -107,7 +111,7 @@ public class InAppHelper {
      */
     private boolean isIranAppsInstalled() {
         try {
-            activity.getPackageManager().getPackageInfo(InAppKeys.IRANAPPS_PACKAGE_NAME, 0);
+            activity.getPackageManager().getPackageInfo(appStore.packageName, 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             return false;
@@ -118,7 +122,7 @@ public class InAppHelper {
      * @return true if InAppHelper is connected to IranApps billing service otherwise returns false
      */
     public boolean isConnectedToService() {
-        return inAppService != null;
+        return iabService != null;
     }
 
     /**
@@ -131,7 +135,7 @@ public class InAppHelper {
      * @param listener a callback listener to inform response of this method
      */
     public void getSkuDetails(ArrayList<String> skus, SkuDetailListener listener) {
-        new SkuDetailGetter(inAppService, skus, listener).start();
+        new SkuDetailGetter(iabService, skus, listener).start();
     }
 
     /**
@@ -143,7 +147,7 @@ public class InAppHelper {
      * @param listener a callback listener to inform response of this method<br>
      */
     public void getPurchases(PurchasesListener listener) {
-        new GetPurchasesHelper(inAppService, listener, null).start();
+        new GetPurchasesHelper(iabService, listener, null).start();
     }
 
     /**
@@ -157,7 +161,7 @@ public class InAppHelper {
      * @throws android.os.RemoteException on connection failure with billing service
      */
     public void buyProduct(final String productId, final String developerPayload, boolean consumable, BuyProductListener listener) throws RemoteException {
-        pendingRequest = new BuyProductHelper(activity, inAppService, productId, consumable, developerPayload, listener);
+        pendingRequest = new BuyProductHelper(activity, iabService, productId, consumable, developerPayload, listener);
         pendingRequest.start();
     }
 
@@ -168,7 +172,7 @@ public class InAppHelper {
      * @param loginListener a callback listener to inform response of this method
      */
     public void loginUser(LoginListener loginListener) {
-        pendingRequest = new InAppLoginHelper(activity, inAppService, loginListener);
+        pendingRequest = new InAppLoginHelper(activity, iabService, loginListener);
         pendingRequest.start();
     }
 
@@ -180,7 +184,7 @@ public class InAppHelper {
      * @param consumeListener A callback listener to inform response of this method
      */
     public void consumeProduct(String purchaseToken, ConsumeListener consumeListener) {
-        new ConsumeHelper(inAppService, purchaseToken, consumeListener).start();
+        new ConsumeHelper(iabService, purchaseToken, consumeListener).start();
     }
 
     /**
@@ -190,7 +194,7 @@ public class InAppHelper {
      * @throws android.os.RemoteException on connection failure with billing service
      */
     public boolean isUserLogin() throws RemoteException {
-        Bundle loginResponse = inAppService.getLoginIntent(IAB_VERSION, PACKAGE_NAME);
+        Bundle loginResponse = iabService.getLoginIntent(IAB_VERSION, PACKAGE_NAME);
         return loginResponse.getBoolean(InAppKeys.USER_IS_LOGIN);
     }
 
@@ -201,7 +205,7 @@ public class InAppHelper {
      */
     public boolean isBillingSupported() {
         try {
-            return inAppService.isBillingSupported(IAB_VERSION, activity.getPackageName(), TYPE_INAPP) == InAppKeys.RESPONSE_OK;
+            return iabService.isBillingSupported(IAB_VERSION, activity.getPackageName(), TYPE_INAPP) == InAppKeys.RESPONSE_OK;
         } catch (RemoteException e) {
             e.printStackTrace();
             return false;
@@ -269,14 +273,14 @@ public class InAppHelper {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             //connection is established make IranApps service and inform the listener
-            inAppService = IranAppsIabService.Stub.asInterface(service);
+            iabService = new IabService(appStore, service);
             inAppHelperListener.onConnectedToIABService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             //connection to service is lost inform the listener
-            inAppService = null;
+            iabService = null;
             inAppHelperListener.onConnectionLost();
         }
     }

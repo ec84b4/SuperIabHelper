@@ -7,9 +7,9 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.RemoteException;
 
-import ir.tgbs.iranapps.billing.IranAppsIabService;
 import ir.tgbs.iranapps.billing.helper.interfaces.BuyProductListener;
 import ir.tgbs.iranapps.billing.helper.interfaces.ConsumeListener;
+import ir.tgbs.iranapps.billing.helper.model.IabService;
 import ir.tgbs.iranapps.billing.helper.model.PurchaseItem;
 
 /**
@@ -53,7 +53,7 @@ public class BuyProductHelper extends InAppRequestHelper {
     /**
      * connection to IranApps billing service
      */
-    private IranAppsIabService inAppService;
+    private IabService inAppService;
 
     /**
      * @param activity         instance of the activity that has requested the purchase process
@@ -63,7 +63,7 @@ public class BuyProductHelper extends InAppRequestHelper {
      * @param developerPayload optional parameter that can later be used to check the validity of the purchase data
      * @param listener         purchase callback listener
      */
-    public BuyProductHelper(Activity activity, IranAppsIabService inAppService, String productId,
+    public BuyProductHelper(Activity activity, IabService inAppService, String productId,
                             boolean consumable, String developerPayload, BuyProductListener listener) {
         super(listener);
         this.activity = activity;

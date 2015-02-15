@@ -2,8 +2,8 @@ package ir.tgbs.iranapps.billing.helper.util;
 
 import android.os.RemoteException;
 
-import ir.tgbs.iranapps.billing.IranAppsIabService;
 import ir.tgbs.iranapps.billing.helper.interfaces.ConsumeListener;
+import ir.tgbs.iranapps.billing.helper.model.IabService;
 
 /**
  * helper class for consuming a owned product. <p>
@@ -22,7 +22,7 @@ public class ConsumeHelper extends Thread {
     /**
      * connection to IranApps billing service
      */
-    private IranAppsIabService inAppService;
+    private IabService inAppService;
 
     /**
      * token of the bought product to be consumed
@@ -34,7 +34,7 @@ public class ConsumeHelper extends Thread {
      * @param purchaseToken purchase token of the bought product
      * @param listener      callback listener for indicating success or failure of consuming process
      */
-    public ConsumeHelper(IranAppsIabService inAppService, String purchaseToken, ConsumeListener listener) {
+    public ConsumeHelper(IabService inAppService, String purchaseToken, ConsumeListener listener) {
         this.listener = listener;
         this.inAppService = inAppService;
         this.purchaseToken = purchaseToken;

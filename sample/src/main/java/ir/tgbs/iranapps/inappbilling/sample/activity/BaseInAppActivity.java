@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import ir.tgbs.iranapps.billing.helper.model.AppStore;
 import ir.tgbs.iranapps.billing.helper.util.InAppError;
 import ir.tgbs.iranapps.billing.helper.util.InAppHelper;
 
@@ -13,7 +14,7 @@ public class BaseInAppActivity extends ActionBarActivity implements InAppHelper.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inAppHelper = new InAppHelper(this, this);
+        inAppHelper = new InAppHelper(this, AppStore.GOOGLE_PLAY, this);
     }
 
     @Override

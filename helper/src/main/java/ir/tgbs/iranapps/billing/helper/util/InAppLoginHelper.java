@@ -7,8 +7,8 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.RemoteException;
 
-import ir.tgbs.iranapps.billing.IranAppsIabService;
 import ir.tgbs.iranapps.billing.helper.interfaces.LoginListener;
+import ir.tgbs.iranapps.billing.helper.model.IabService;
 
 /**
  * @author Shima Zeinali
@@ -17,7 +17,7 @@ import ir.tgbs.iranapps.billing.helper.interfaces.LoginListener;
  */
 public class InAppLoginHelper extends InAppRequestHelper {
     public static final int LOGIN_REQUEST_CODE = 1001;
-    private IranAppsIabService inAppService;
+    private IabService inAppService;
     private LoginListener loginListener;
     private Activity activity;
 
@@ -28,7 +28,7 @@ public class InAppLoginHelper extends InAppRequestHelper {
      * @param inAppService  the service that provides communicate to IranApps in-app billing service
      * @param loginListener callback listener for indicating failure and success consume process
      */
-    public InAppLoginHelper(Activity activity, IranAppsIabService inAppService, LoginListener loginListener) {
+    public InAppLoginHelper(Activity activity, IabService inAppService, LoginListener loginListener) {
         super(loginListener);
         this.activity = activity;
         this.inAppService = inAppService;

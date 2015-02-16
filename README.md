@@ -27,7 +27,7 @@ dependencies {
 public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
     super.onCreate(savedInstanceState, persistentState);
     setContentView(R.layout.activity_main);
-    inAppHelper = new InAppHelper(this, new InAppHelper.InAppHelperListener() {
+    inAppHelper = new InAppHelper(this, AppStore.IRANAPPS, new InAppHelper.InAppHelperListener() {
         @Override
         public void onConnectedToIABService() {
         }

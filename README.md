@@ -17,6 +17,15 @@ dependencies {
 
 ---
 
+## Permission
+after including the library in your project you must add the permission of the appStore you want to use to your manifest.  
+* IranApps: `<uses-permission android:name="ir.tgbs.iranapps.permission.BILLING"/>`  
+* CafeBazaar: `<uses-permission android:name="com.farsitel.bazaar.permission.PAY_THROUGH_BAZAAR"/>`
+* Cando: no permission required
+* Myket: `<uses-permission android:name="ir.mservices.market.BILLING"/>`
+* Parshub: no permission required
+* Google Play: `<uses-permission android:name="com.android.vending.BILLING"/>`
+
 ## Methods You Must Override
 
 * **in the activity that you want to do in-app billing requests create a new instance of `InAppHelper` inside `onCreate`.**  

@@ -70,7 +70,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 this project is based on Android Studio.  
 to localy run the sample you need to do the following:
 
-1. download the project from [**here**](https://github.com/hister/IabHeleprAllMarkets/archive/master.zip)
+1. download the project from [**here**](https://github.com/hister/SuperIabHelper/archive/master.zip)
 2. extract the project zip
 3. from Android studio go to File->import project and select the folder of extracted files
 4. now run the sample module.

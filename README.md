@@ -1,21 +1,19 @@
-# IranApps In-app Billing Helper
+# In-app Billing Helper for all AppStores
 
 this library is a small helper with a simple API that makes it very easy to communicate with IranApps in-app billing service.
 
 in the project there's also a sample of how to use the helper.
 
-you can find [IranApps in-app billing documentation here](http://developer.iranapps.ir/docs/inappbilling)
-
-### Current version 1.0.1
+### Current version 1.0
 
 ### Gradle Dependency (jCenter)  
 Easily reference the library in your Android projects using this dependency in your module's `build.gradle` file:  
 ```Gradle
 dependencies {
-    compile 'ir.tgbs.iranapps:billing-helper:1.0.1'
+    compile 'ir.hister:billing-helper:1.0'
 }
 ```
-[ ![Download](https://api.bintray.com/packages/iranapps/maven/billing-helper/images/download.svg) ](https://bintray.com/iranapps/maven/billing-helper/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/hister/maven/billing-helper/images/download.svg) ](https://bintray.com/hister/maven/billing-helper/_latestVersion)
 
 ---
 
@@ -63,7 +61,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 this project is based on Android Studio.  
 to localy run the sample you need to do the following:
 
-1. download the project from [**here**](https://github.com/IranApps/InAppBillingHelper/archive/master.zip)
+1. download the project from [**here**](https://github.com/hister/IabHeleprAllMarkets/archive/master.zip)
 2. extract the project zip
 3. from Android studio go to File->import project and select the folder of extracted files
 4. now run the sample module.

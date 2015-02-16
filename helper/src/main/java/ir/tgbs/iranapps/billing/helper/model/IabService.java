@@ -10,8 +10,8 @@ import com.android.vending.billing.IInAppBillingService;
 import ir.tgbs.iranapps.billing.IranAppsIabService;
 
 /**
- * Created by Khaled Bakhtiari on 2/15/2015.
- * <a href="http://about.me/kh.bakhtiari">
+ * @author Khaled Bakhtiari
+ * @since 2015-02-15
  */
 public class IabService {
     private IInterface service;
@@ -124,12 +124,8 @@ public class IabService {
             case IRANAPPS:
                 return ((IranAppsIabService) service).getLoginIntent(apiVersion, packageName);
 
-//            case CAFEBAZAAR:
-//                return ((IInAppBillingService) service).consumePurchase(apiVersion, packageName, purchaseToken);
-
             default:
                 throw new AppStore.NoSuchAppStoreException(appStore);
         }
     }
-
 }

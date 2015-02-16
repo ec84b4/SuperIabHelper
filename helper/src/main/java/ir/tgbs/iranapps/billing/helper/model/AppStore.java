@@ -8,8 +8,8 @@ import static ir.tgbs.iranapps.billing.helper.util.InAppKeys.MYKET_PACKAGE_NAME;
 import static ir.tgbs.iranapps.billing.helper.util.InAppKeys.PARSHUB_PACKAGE_NAME;
 
 /**
- * Created by Khaled Bakhtiari on 2/15/2015.
- * <a href="http://about.me/kh.bakhtiari">
+ * @author Khaled Bakhtiari
+ * @since 2015-02-15
  */
 public enum AppStore {
     IRANAPPS(IRANAPPS_PACKAGE_NAME, "ir.tgbs.iranapps.billing.IranAppsIabService"),

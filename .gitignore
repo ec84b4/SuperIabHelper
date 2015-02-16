@@ -34,5 +34,4 @@ proguard/
 # Log Files
 *.log
 *.iml
-*.iml
 sample/sample.iml

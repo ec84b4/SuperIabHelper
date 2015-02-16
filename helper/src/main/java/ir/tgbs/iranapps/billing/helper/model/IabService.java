@@ -25,6 +25,9 @@ public class IabService {
 
             case CAFEBAZAAR:
             case GOOGLE_PLAY:
+            case CANDO:
+            case MYKET:
+            case PARSHUB:
                 this.service = IInAppBillingService.Stub.asInterface(binder);
                 break;
         }
@@ -38,6 +41,9 @@ public class IabService {
 
             case CAFEBAZAAR:
             case GOOGLE_PLAY:
+            case CANDO:
+            case MYKET:
+            case PARSHUB:
                 return ((IInAppBillingService) service).isBillingSupported(apiVersion, packageName, type);
 
             default:
@@ -52,6 +58,9 @@ public class IabService {
 
             case CAFEBAZAAR:
             case GOOGLE_PLAY:
+            case CANDO:
+            case MYKET:
+            case PARSHUB:
                 return ((IInAppBillingService) service).getSkuDetails(apiVersion, packageName, type, skusBundle);
 
             default:
@@ -66,6 +75,9 @@ public class IabService {
 
             case CAFEBAZAAR:
             case GOOGLE_PLAY:
+            case CANDO:
+            case MYKET:
+            case PARSHUB:
                 return ((IInAppBillingService) service).getBuyIntent(apiVersion, packageName, sku, type, developerPayload);
 
             default:
@@ -80,6 +92,9 @@ public class IabService {
 
             case CAFEBAZAAR:
             case GOOGLE_PLAY:
+            case CANDO:
+            case MYKET:
+            case PARSHUB:
                 return ((IInAppBillingService) service).getPurchases(apiVersion, packageName, type, continuationToken);
 
             default:
@@ -94,6 +109,9 @@ public class IabService {
 
             case CAFEBAZAAR:
             case GOOGLE_PLAY:
+            case CANDO:
+            case MYKET:
+            case PARSHUB:
                 return ((IInAppBillingService) service).consumePurchase(apiVersion, packageName, purchaseToken);
 
             default:

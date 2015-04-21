@@ -4,13 +4,13 @@ this library is a small helper with a simple API that makes it very easy to comm
 
 in the project there's also a sample of how to use the helper.
 
-### Current version 1.0
+### Current version 1.0.1
 
 ### Gradle Dependency (jCenter)  
 Easily reference the library in your Android projects using this dependency in your module's `build.gradle` file:  
 ```Gradle
 dependencies {
-    compile 'ir.hister:billing-helper:1.0'
+    compile 'ir.hister:billing-helper:1.0.1'
 }
 ```
 [ ![Download](https://api.bintray.com/packages/hister/maven/billing-helper/images/download.svg) ](https://bintray.com/hister/maven/billing-helper/_latestVersion)

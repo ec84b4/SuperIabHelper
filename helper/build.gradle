@@ -27,7 +27,7 @@ publish {
     userOrg = 'hister'
     groupId = 'ir.hister'
     artifactId = 'billing-helper'
-    version = '1.0'
+    version = '1.0.1'
     description = 'A helper for android appstores in-app billing. IranApps, CafeBazaar, Google Play, Cando, Myket, Parshub'
     website = 'https://github.com/hister/IabHeleprAllMarkets'
     issueTracker = "${website}/issues"

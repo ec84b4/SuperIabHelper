@@ -41,20 +41,11 @@ public class InAppHelper {
      * packageName of the application using helper to make in-app requests to IranApps
      */
     public static String PACKAGE_NAME;
-    /**
-     * instance of activity that is using this helper
-     */
-    Activity activity;
 
     /**
      * IranApps in-app billing connection
      */
     IabService iabService;
-
-    /**
-     * callback listener on connection to service's success or failure
-     */
-    InAppHelperListener inAppHelperListener;
 
     /**
      * current on the fly request(this request is waiting for its response from onActivityResult)
@@ -64,7 +55,7 @@ public class InAppHelper {
     /**
      * Service Connection used to bind to IranApps in-app billing service
      */
-    ServiceConnection inAppConnection = new InAppServiceConnection();
+    ServiceConnection inAppConnection;
 
     AppStore appStore;
 
@@ -79,27 +70,26 @@ public class InAppHelper {
      * you must always call {@link ir.tgbs.iranapps.billing.helper.util.InAppHelper#onActivityResult(int, int, android.content.Intent)}
      * from your {@link android.app.Activity#onActivityResult(int, int, android.content.Intent)}
      * otherwise the helper wouldn't work properly <p>
-     * you also should call {@link InAppHelper#onActivityDestroy()} for your {@link android.app.Activity#onDestroy()}
+     * you also should call {@link InAppHelper#onActivityDestroy(Activity)} for your {@link android.app.Activity#onDestroy()}
      * for the helper to work properly
      *
-     * @param activity            used to communicate to IranApps billing service
+     * @param context             used to communicate to IranApps billing service
      * @param inAppHelperListener listener used to notice you when InAppHelper connects to IranApps billing service
      */
-    public InAppHelper(Activity activity, AppStore appStore,  InAppHelperListener inAppHelperListener) {
-        PACKAGE_NAME = activity.getPackageName();
-        this.activity = activity;
+    public InAppHelper(Context context, AppStore appStore, InAppHelperListener inAppHelperListener) {
+        PACKAGE_NAME = context.getPackageName();
         this.appStore = appStore;
-        this.inAppHelperListener = inAppHelperListener;
 
         //bind to IranApps billing service
         Intent serviceIntent = new Intent(appStore.intentAction);
         serviceIntent.setPackage(appStore.packageName);
-        boolean canConnect = activity.bindService(serviceIntent, inAppConnection, Context.BIND_AUTO_CREATE);
+        inAppConnection = new InAppServiceConnection(inAppHelperListener);
+        boolean canConnect = context.getApplicationContext().bindService(serviceIntent, inAppConnection, Context.BIND_AUTO_CREATE);
         if (!canConnect) {
-            if (!isIranAppsInstalled()) {
-                this.inAppHelperListener.onCantConnectToIABService(InAppError.BILLING_RESPONSE_IRANAPPS_NOT_AVAILABLE);
+            if (!isIranAppsInstalled(context)) {
+                inAppHelperListener.onCantConnectToIABService(InAppError.BILLING_RESPONSE_IRANAPPS_NOT_AVAILABLE);
             } else {
-                this.inAppHelperListener.onCantConnectToIABService(InAppError.LOCAL_CANT_CONNECT_TO_IAB_SERVICE);
+                inAppHelperListener.onCantConnectToIABService(InAppError.LOCAL_CANT_CONNECT_TO_IAB_SERVICE);
             }
         }
     }
@@ -109,9 +99,9 @@ public class InAppHelper {
      *
      * @return true if IranApps is installed on the device otherwise false.
      */
-    private boolean isIranAppsInstalled() {
+    private boolean isIranAppsInstalled(Context context) {
         try {
-            activity.getPackageManager().getPackageInfo(appStore.packageName, 0);
+            context.getPackageManager().getPackageInfo(appStore.packageName, 0);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             return false;
@@ -134,8 +124,10 @@ public class InAppHelper {
      * @param skus     list of skusId to get their information<br>
      * @param listener a callback listener to inform response of this method
      */
-    public void getSkuDetails(ArrayList<String> skus, SkuDetailListener listener) {
-        new SkuDetailGetter(iabService, skus, listener).start();
+    public SkuDetailGetter getSkuDetails(ArrayList<String> skus, SkuDetailListener listener) {
+        SkuDetailGetter skuDetailGetter = new SkuDetailGetter(iabService, skus, listener);
+        skuDetailGetter.start();
+        return skuDetailGetter;
     }
 
     /**
@@ -144,10 +136,30 @@ public class InAppHelper {
      * and if isn't allowed to communicate with the service calls {@link PurchasesListener#onFailedGettingPurchases(InAppError)}<br>
      * with {@link InAppError#LOCAL_HELPER_NOT_CONNECTED_TO_SERVICE} error<br>
      *
-     * @param listener a callback listener to inform response of this method<br>
+     * @param listener a callback listener to inform response of this method
+     * @see #getPurchases(PurchasesListener, String)
      */
-    public void getPurchases(PurchasesListener listener) {
-        new GetPurchasesHelper(iabService, listener, null).start();
+    public GetPurchasesHelper getPurchases(PurchasesListener listener) {
+        GetPurchasesHelper getPurchasesHelper = new GetPurchasesHelper(iabService, listener, null);
+        getPurchasesHelper.start();
+        return getPurchasesHelper;
+    }
+
+    /**
+     * checks if its allowed to communicate with IranApps billing service<br>
+     * if so gets the details of the purchased items and returns them on the given listener
+     * and if isn't allowed to communicate with the service calls {@link PurchasesListener#onFailedGettingPurchases(InAppError)}<br>
+     * with {@link InAppError#LOCAL_HELPER_NOT_CONNECTED_TO_SERVICE} error<br>
+     *
+     * @param listener          a callback listener to inform response of this method<br>
+     * @param continuationToken to be set as null for the first call, if the number of owned skus are too many,
+     *                          a continuationToken is returned in the response. This method can
+     *                          be called again with the continuation token to get the next set of owned skus.
+     */
+    public GetPurchasesHelper getPurchases(PurchasesListener listener, String continuationToken) {
+        GetPurchasesHelper getPurchasesHelper = new GetPurchasesHelper(iabService, listener, continuationToken);
+        getPurchasesHelper.start();
+        return getPurchasesHelper;
     }
 
     /**
@@ -159,9 +171,11 @@ public class InAppHelper {
      * @param developerPayload optional parameter that can later be used to check the validity of the purchase data
      * @param listener         purchase callback listener
      */
-    public void buyProduct(final String productId, final String developerPayload, boolean consumable, BuyProductListener listener) {
-        pendingRequest = new BuyProductHelper(activity, iabService, productId, consumable, developerPayload, listener);
-        pendingRequest.start();
+    public BuyProductHelper buyProduct(Activity activity, final String productId, final String developerPayload, boolean consumable, BuyProductListener listener) {
+        BuyProductHelper buyProductHelper = new BuyProductHelper(iabService, productId, consumable, developerPayload, listener);
+        buyProductHelper.start(activity);
+        pendingRequest = buyProductHelper;
+        return buyProductHelper;
     }
 
     /**
@@ -170,9 +184,11 @@ public class InAppHelper {
      *
      * @param loginListener a callback listener to inform response of this method
      */
-    public void loginUser(LoginListener loginListener) {
-        pendingRequest = new InAppLoginHelper(activity, iabService, loginListener);
-        pendingRequest.start();
+    public InAppLoginHelper loginUser(Activity activity, LoginListener loginListener) {
+        InAppLoginHelper loginHelper = new InAppLoginHelper(iabService, loginListener);
+        loginHelper.start(activity);
+        pendingRequest = loginHelper;
+        return loginHelper;
     }
 
     /**
@@ -182,8 +198,10 @@ public class InAppHelper {
      * @param purchaseToken   token of the purchase that needs to be consumed
      * @param consumeListener A callback listener to inform response of this method
      */
-    public void consumeProduct(String purchaseToken, ConsumeListener consumeListener) {
-        new ConsumeHelper(iabService, purchaseToken, consumeListener).start();
+    public ConsumeHelper consumeProduct(String purchaseToken, ConsumeListener consumeListener) {
+        ConsumeHelper consumeHelper = new ConsumeHelper(iabService, purchaseToken, consumeListener);
+        consumeHelper.start();
+        return consumeHelper;
     }
 
     /**
@@ -215,8 +233,9 @@ public class InAppHelper {
      * this method must be called inside {@link android.app.Activity#onDestroy()} <br>
      * it disconnects the helper from IranApps in-app billing service
      */
-    public void onActivityDestroy() {
-        activity.unbindService(inAppConnection);
+    public void onActivityDestroy(Activity activity) {
+        if (activity.isFinishing())
+            activity.getApplicationContext().unbindService(inAppConnection);
     }
 
     /**
@@ -247,33 +266,46 @@ public class InAppHelper {
      */
     public interface InAppHelperListener {
         /**
-         * this method is called after the connection to billing service is established
+         * this method is called after the connection to billing service is established. <br>
+         * this method is going to be called only once.
          */
-        public void onConnectedToIABService();
+        void onConnectedToIABService();
 
         /**
          * this method is called when helper can't failed to connect to billing service
          *
          * @param error the error that caused the failure of helper to connect to billing service
          */
-        public void onCantConnectToIABService(InAppError error);
+        void onCantConnectToIABService(InAppError error);
 
         /**
          * after the connection to billing service is established,
-         * whenever the connection is lost to billing service this method is called
+         * whenever the connection is lost to billing service this method is called. <br>
+         * this method is going to be called only once.
          */
-        public void onConnectionLost();
+        void onConnectionLost();
     }
 
     /**
      * helper's service connection to IranApps in-app billing service
      */
     private class InAppServiceConnection implements ServiceConnection {
+        private InAppHelperListener inAppHelperListener;
+        private boolean connectedSent;
+        private boolean disconnectedSent;
+
+        public InAppServiceConnection(InAppHelperListener inAppHelperListener) {
+            this.inAppHelperListener = inAppHelperListener;
+        }
+
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             //connection is established make IranApps service and inform the listener
             iabService = new IabService(appStore, service);
-            inAppHelperListener.onConnectedToIABService();
+            if (!connectedSent) {
+                inAppHelperListener.onConnectedToIABService();
+                connectedSent = true;
+            }
         }
 
         @Override
@@ -281,6 +313,10 @@ public class InAppHelper {
             //connection to service is lost inform the listener
             iabService = null;
             inAppHelperListener.onConnectionLost();
+            if (!disconnectedSent) {
+                inAppHelperListener.onConnectionLost();
+                disconnectedSent = true;
+            }
         }
     }
 }

@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 22
-        versionCode 2
-        versionName "1.0.1"
+        targetSdkVersion 23
+        versionCode 1
+        versionName "2.0-SNAPSHOT"
     }
     buildTypes {
         release {
@@ -19,15 +19,11 @@ android {
     }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-}
-
 publish {
     userOrg = 'hister'
     groupId = 'ir.hister'
     artifactId = 'billing-helper'
-    version = '1.0.1'
+    version = '2.0-SNAPSHOT'
     description = 'A helper for android appstores in-app billing. IranApps, CafeBazaar, Google Play, Cando, Myket, Parshub'
     website = 'https://github.com/hister/IabHeleprAllMarkets'
     issueTracker = "${website}/issues"

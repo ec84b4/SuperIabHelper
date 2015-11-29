@@ -12,7 +12,7 @@ import static ir.tgbs.iranapps.billing.helper.util.InAppKeys.PARSHUB_PACKAGE_NAM
  * @since 2015-02-15
  */
 public enum AppStore {
-    IRANAPPS(IRANAPPS_PACKAGE_NAME, "ir.tgbs.iranapps.billing.IranAppsIabService"),
+    IRANAPPS(IRANAPPS_PACKAGE_NAME, "ir.tgbs.iranapps.billing.BIND"),
     CAFEBAZAAR(CAFEBAZAAR_PACKAGE_NAME, "ir.cafebazaar.pardakht.InAppBillingService.BIND"),
     GOOGLE_PLAY(GOOGLE_PLAY_PACKAGE_NAME, "com.android.vending.billing.InAppBillingService.BIND"),
     CANDO(CANDO_PACKAGE_NAME, "com.ada.market.service.payment.BIND"),

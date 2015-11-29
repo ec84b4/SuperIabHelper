@@ -101,8 +101,17 @@ public class BuyProductHelper extends InAppRequestHelper {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BUY_REQUEST_CODE) {
-            int responseCode = data == null ? InAppKeys.BILLING_RESPONSE_RESULT_ERROR :
-                    data.getIntExtra(InAppKeys.RESPONSE_CODE, InAppKeys.BILLING_RESPONSE_RESULT_ERROR);
+            int responseCode = InAppKeys.BILLING_RESPONSE_RESULT_ERROR;
+            if (data != null) {
+                Bundle extras = data.getExtras();
+                if (extras != null) {
+                    if (extras.containsKey(InAppKeys.RESPONSE_CODE)) {
+                        responseCode = extras.getInt(InAppKeys.RESPONSE_CODE);
+                    } else if (extras.containsKey(InAppKeys.INAPP_PURCHASE_DATA) && extras.containsKey(InAppKeys.INAPP_DATA_SIGNATURE)) {
+                        responseCode = InAppKeys.RESPONSE_OK;
+                    }
+                }
+            }
 
             if (responseCode != InAppKeys.RESPONSE_OK) {
                 listener.onBuyProductFailed(InAppError.getError(responseCode));

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'bintray-release'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 23
@@ -9,7 +9,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
-        versionName "2.0-SNAPSHOT"
+        versionName "2.0"
     }
     buildTypes {
         release {
@@ -23,7 +23,7 @@ publish {
     userOrg = 'hister'
     groupId = 'ir.hister'
     artifactId = 'billing-helper'
-    version = '2.0-SNAPSHOT'
+    version = '2.0'
     description = 'A helper for android appstores in-app billing. IranApps, CafeBazaar, Google Play, Cando, Myket, Parshub'
     website = 'https://github.com/hister/IabHeleprAllMarkets'
     issueTracker = "${website}/issues"

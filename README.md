@@ -4,13 +4,13 @@ this library is a small helper with a simple API that makes it very easy to comm
 
 in the project there's also a sample of how to use the helper.
 
-### Current version 1.0.1
+### Current version 2.0
 
 ### Gradle Dependency (jCenter)  
 Easily reference the library in your Android projects using this dependency in your module's `build.gradle` file:  
 ```Gradle
 dependencies {
-    compile 'ir.hister:billing-helper:1.0.1'
+    compile 'ir.hister:billing-helper:2.0'
 }
 ```
 [ ![Download](https://api.bintray.com/packages/hister/maven/billing-helper/images/download.svg) ](https://bintray.com/hister/maven/billing-helper/_latestVersion)
@@ -65,6 +65,12 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     inAppHelper.onActivityResult(requestCode, resultCode, data);
 }
 ```
+
+---
+
+## Activity recreation support (config changes)
+if your activity is able to be destroyed and recreated you must save and restore the InAppHelper of that activity and update the listener of any operation that is currently in progress.
+for an example you can see the [BaseInAppActivity](https://github.com/hister/SuperIabHelper/blob/master/sample/src/main/java/ir/tgbs/iranapps/inappbilling/sample/activity/BaseInAppActivity.java) and the implementation of 'InAppHolderFragment' that saves the data and can be retained in activity's onCreate method(also see the onCreate() method inside BaseInAppActivity on how the InAppHelper instance is created). and see [BuyActivity](https://github.com/hister/SuperIabHelper/blob/master/sample/src/main/java/ir/tgbs/iranapps/inappbilling/sample/activity/BuyActivity.java) on how the buy product operation's listener is updated inside onCreate() method.
 
 ## Run the sample
 this project is based on Android Studio.  
